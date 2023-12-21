@@ -3,30 +3,26 @@ from time import sleep
 import random
 from multiprocessing import Process
 import boto3
+import yaml
 import json
 import sqlalchemy
 from sqlalchemy import text
-
 
 random.seed(100)
 
 
 class AWSDBConnector:
-
-    def __init__(self):
-        self.HOST = "pinterestdbreadonly.cq2e8zno855e.eu-west-1.rds.amazonaws.com"
-        self.USER = 'project_user'
-        self.PASSWORD = ':t%;yCY3Yjg'
-        self.DATABASE = 'pinterest_data'
-        self.PORT = 3306
-        self.invoke_url_pin = "https://z6bil38h3c.execute-api.us-east-1.amazonaws.com/Main/topics/12863e427a8f.pin"
-        self.invoke_url_geo = "https://z6bil38h3c.execute-api.us-east-1.amazonaws.com/Main/topics/12863e427a8f.geo"
-        self.invoke_url_user = "https://z6bil38h3c.execute-api.us-east-1.amazonaws.com/Main/topics/12863e427a8f.user"
-        self.headers = {'Content-Type': 'application/vnd.kafka.json.v2+json'} 
-
-        
+    def read_db_creds(self):
+        ''''
+        This method reads the yaml file that holds all the credentials for the pgadmin connection and the AWS RDS connection
+        '''
+        with open('db_creds.yaml') as f:
+            data_base_creds = yaml.load(f, Loader=yaml.FullLoader)
+        return data_base_creds
+   
     def create_db_connector(self):
-        engine = sqlalchemy.create_engine(f"mysql+pymysql://{self.USER}:{self.PASSWORD}@{self.HOST}:{self.PORT}/{self.DATABASE}?charset=utf8mb4")
+        read_db_dict = self.read_db_creds()
+        engine = sqlalchemy.create_engine(f"mysql+pymysql://{read_db_dict['USER']}:{read_db_dict['PASSWORD']}@{read_db_dict['HOST']}:{read_db_dict['PORT']}/{read_db_dict['DATABASE']}?charset=utf8mb4")
         return engine
 
 
@@ -108,9 +104,9 @@ def run_infinite_post_data_loop():
                 ]
             })
             
-            response = requests.request("POST", new_connector.invoke_url_geo, headers=new_connector.headers, data=geo_payload)
-            response = requests.request("POST", new_connector.invoke_url_pin, headers=new_connector.headers, data=pin_payload)
-            response = requests.request("POST", new_connector.invoke_url_user, headers=new_connector.headers, data=user_payload)
+            response = requests.request("POST", new_connector.read_db_creds()['invoke_url_geo'], headers=new_connector.read_db_creds()['headers'], data=geo_payload)
+            response = requests.request("POST",  new_connector.read_db_creds()['invoke_url_pin'], headers=new_connector.read_db_creds()['headers'], data=pin_payload)
+            response = requests.request("POST", new_connector.read_db_creds()['invoke_url_user'], headers=new_connector.read_db_creds()['headers'], data=user_payload)
 
 
 if __name__ == "__main__":
