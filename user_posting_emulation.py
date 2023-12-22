@@ -54,10 +54,6 @@ def run_infinite_post_data_loop():
             
             for row in user_selected_row:
                 user_result = dict(row._mapping)
-            
-            # print(pin_result)
-            # print(geo_result)
-            # print(user_result)
 
             pin_payload = json.dumps({
                 "records": [
@@ -113,6 +109,3 @@ if __name__ == "__main__":
     run_infinite_post_data_loop()
     print('Working')
     
-    
-
-
