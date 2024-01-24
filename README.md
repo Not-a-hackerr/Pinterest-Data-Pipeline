@@ -5,13 +5,14 @@
 - [Project Breif](#project-breif)
 - [Data](#data)
 - [Project Tools](#project-tools)
-- [Milestone 3](#milestone-3)
-- [Milestone 4](#milestone-4)
-- [Milestone 5](#milestone-5)
-- [Milestone 6](#milestone-6)
-- [Milestone 7](#milestone-7)
-- [Milestone 8](#milestone-8)
-- [Milestone 9](#milestone-9)
+- [Project Archetechture Diagram](#project-archetechture-diagram)
+- [Milestone 3](#milestone-3--configure-the-ec2-kafka-client)
+- [Milestone 4](#milestone-4--connect-a-msk-cluster-to-a-s3-bucket)
+- [Milestone 5](#milestone-5-configuring-an-api-gateway)
+- [Milestone 6](#milestone-6-set-up-databricks)
+- [Milestone 7](#milestone-7-spark-usage-in-databricks)
+- [Milestone 8](#milestone-8-aws-mwaa)
+- [Milestone 9](#milestone-9-aws-kinesis)
 
 
 ## Project Breif
@@ -68,6 +69,12 @@ user_data:
 - [Databricks](https://docs.databricks.com/en/index.html) - This project uses the Databricks platform to perform Spark processing of batch and streaming data.
 
 - [Managed Workflows for Apache Airflow](https://docs.aws.amazon.com/mwaa/latest/userguide/what-is-mwaa.html) - Apache Airflow enables users to use Python to build scheduling workflows for batch-oriented processes. This project uses MWAA to orchestrate batch processing on the Databricks platform
+
+## Project Archetechture Diagram
+
+![Alt Text](./CloudPinterestPipeline.png)
+
+
 
 ## Milestone 3 : Configure the EC2 Kafka client
 #### Goal: 
@@ -537,7 +544,7 @@ Tasks:
     display(results)
     ~~~
 
-## Milestone 8
+## Milestone 8: AWS MWAA
 #### Goal: Orchestrate Databricks workloads on AWS MWAA
 
 Tasks:
@@ -548,7 +555,7 @@ Tasks:
 2. Manually trigger the DAG to run a Databrixks Notebook
     - Inside MWAA, the DAG is trigger to check if it runs successfully
 
-## Milestone 9
+## Milestone 9: AWS Kinesis
 #### Goal: Send streaming data to Kinesis and read this data inside Databricks
 
 Tasks: 
