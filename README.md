@@ -2,7 +2,7 @@
 
 ## Table of Contents
 
-- [Project Breif](#project-breif)
+- [Project Brief](#project-brief)
 - [Data](#data)
 - [Project Tools](#project-tools)
 - [Project Archetechture Diagram](#project-archetechture-diagram)
