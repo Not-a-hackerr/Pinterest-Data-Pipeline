@@ -14,7 +14,7 @@ random.seed(100)
 class AWSDBConnector:
     def read_db_creds(self):
         ''''
-        This method reads the yaml file that holds all the credentials for the pgadmin connection and the AWS RDS connection
+        This method reads the yaml file that holds all the credentials for AWS 
         '''
         with open('db_creds.yaml') as f:
             data_base_creds = yaml.load(f, Loader=yaml.FullLoader)
@@ -28,8 +28,8 @@ class AWSDBConnector:
 
 new_connector = AWSDBConnector()
 
-def post_data_to_kafka(url, payload_data):
-        return requests.request("POST", new_connector.read_db_creds()[url], headers=new_connector.read_db_creds()['headers'], data= payload_data)
+def post_data_to_kenesis(url, payload_data):
+        return requests.request("PUT", new_connector.read_db_creds()[url], headers=new_connector.read_db_creds()['k_headers'], data= payload_data)
 
 
 def run_infinite_post_data_loop():
@@ -59,9 +59,8 @@ def run_infinite_post_data_loop():
                 user_result = dict(row._mapping)
 
             pin_payload = json.dumps({
-                "records": [
-                    {
-                    "value": {
+                "StreamName": "streaming-12863e427a8f-pin",
+                "Data": {
                         "index": pin_result["index"], 
                         "unique_id": pin_result["unique_id"], 
                         "title": pin_result["title"], 
@@ -73,42 +72,45 @@ def run_infinite_post_data_loop():
                         "image_src": pin_result["image_src"],
                         "downloaded": pin_result["downloaded"],
                         "save_location": pin_result["save_location"],
-                        "category": pin_result["category"]}
-                    }
-                ]
+                        "category": pin_result["category"]
+                        },
+                        "PartitionKey": "pin_partition"
+                
             })
                        
 
             geo_payload = json.dumps({
-                "records": [
-                    {
-                    "value": {
+                "StreamName": "streaming-12863e427a8f-geo",
+                "Data":{
                         "ind": geo_result["ind"],
                         "timestamp": str(geo_result["timestamp"]),
                         "latitude": geo_result["latitude"],
                         "longitude": geo_result["longitude"],
-                        "country": geo_result["country"]}
-                    }
-                ]
+                        "country": geo_result["country"]
+                        },
+                        "PartitionKey": "geo_partition"
             })
            
 
             user_payload = json.dumps({
-                "records": [
-                    {
-                    "value": {
+                "StreamName": "streaming-12863e427a8f-user",
+                "Data":{
                         "ind": user_result["ind"],
                         "first_name": user_result["first_name"],
                         "last_name": user_result["last_name"],
                         "age":user_result["age"],
-                        "date_joined": str(user_result["date_joined"])}
-                    }
-                ]
+                        "date_joined": str(user_result["date_joined"])
+                       },
+                        "PartitionKey": "user_partition"
             }) 
-            
-            response = post_data_to_kafka('invoke_url_geo', geo_payload) 
-            response = post_data_to_kafka('invoke_url_pin', pin_payload)
-            response = post_data_to_kafka('invoke_url_user', user_payload)
+
+
+            response_geo = post_data_to_kenesis('k_invoke_url_geo', geo_payload) 
+            response_pin = post_data_to_kenesis('k_invoke_url_pin', pin_payload)
+            response_user = post_data_to_kenesis('k_invoke_url_user', user_payload)
+            print(response_geo.status_code)
+            print(response_pin.status_code)
+            print(response_user.status_code)
 
 
 if __name__ == "__main__":
