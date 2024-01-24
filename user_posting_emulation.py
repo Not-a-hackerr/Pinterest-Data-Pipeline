@@ -76,8 +76,7 @@ def run_infinite_post_data_loop():
                         "category": pin_result["category"]}
                     }
                 ]
-            })
-                       
+            })            
 
             geo_payload = json.dumps({
                 "records": [
@@ -92,7 +91,6 @@ def run_infinite_post_data_loop():
                 ]
             })
            
-
             user_payload = json.dumps({
                 "records": [
                     {

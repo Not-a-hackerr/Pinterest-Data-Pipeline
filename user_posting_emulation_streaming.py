@@ -78,7 +78,6 @@ def run_infinite_post_data_loop():
                 
             })
                        
-
             geo_payload = json.dumps({
                 "StreamName": "streaming-12863e427a8f-geo",
                 "Data":{
@@ -90,7 +89,6 @@ def run_infinite_post_data_loop():
                         },
                         "PartitionKey": "geo_partition"
             })
-           
 
             user_payload = json.dumps({
                 "StreamName": "streaming-12863e427a8f-user",
@@ -104,7 +102,6 @@ def run_infinite_post_data_loop():
                         "PartitionKey": "user_partition"
             }) 
 
-
             response_geo = post_data_to_kenesis('k_invoke_url_geo', geo_payload) 
             response_pin = post_data_to_kenesis('k_invoke_url_pin', pin_payload)
             response_user = post_data_to_kenesis('k_invoke_url_user', user_payload)
@@ -116,4 +113,3 @@ def run_infinite_post_data_loop():
 if __name__ == "__main__":
     run_infinite_post_data_loop()
     print('Working')
-    
